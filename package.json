@@ -1,8 +1,11 @@
 {
-  "name": "autogroup",
-  "description": "",
+  "name": "treeify",
+  "description": "Create tree structures from delimited strings.",
   "version": "0.0.1",
-  "private": true,
+  "repository": {
+    "url": "https://github.com/rweigel/treeify"
+  },
+  "main": "js/treeify",
   "dependencies": {
     "jsdom": "*",
     "request": "*",
@@ -10,5 +13,8 @@
     "xml2js": "*",
     "xmlbuilder": "*",
     "express": "*"
-  }
+  },
+  "scripts": {
+  "test": "sh tests/test.sh"
+   }
 }
