@@ -1,13 +1,11 @@
-// node.js
-if (typeof(exports) !== "undefined" && require){
-	treeify = require(__dirname + "/js/treeify").treeify;
-	fs = require("fs");
-	runtest(1,true);
-	runtest(2,true);
-	runtest(3,true);
-	runtest(4,true);
-	runtest(5,true);
-}
+treeify = require(__dirname + "/js/treeify").treeify;
+fs = require("fs");
+runtest(1,true);
+runtest(2,true);
+runtest(3,true);
+runtest(4,true);
+// Large file
+//runtest(5,true);
 
 function runtest(i,debug) {
 
@@ -15,7 +13,10 @@ function runtest(i,debug) {
 		console.log("__________________________________________");
 		console.log("Demo "+i);
 		var d = ["cri.AAT3","cri.AATB","cri_c.AAT3","cri_c.AAT3.minute","cri_c.AATB.minute"];
+		console.log("In:  " + d.join(" "))
+		console.log(d.join(","))
 		var D = treeify(d,".");
+		console.log("Out: " + JSON.stringify(D));
 		json2indent(D);
 	}
 
@@ -23,7 +24,9 @@ function runtest(i,debug) {
 		console.log("__________________________________________");
 		console.log("Demo "+i);
 		var d = ["A.B.C","A.B.D","A.Z.Z","D.Z.Z"];
-		var D = treeify(d,".",json2indent);
+		console.log("In:  " + d.join(" "))
+		var D = treeify(d,".");
+		console.log("Out: " + JSON.stringify(D));
 		json2indent(D);
 	}
 
@@ -31,9 +34,10 @@ function runtest(i,debug) {
 		console.log("__________________________________________");
 		console.log("Demo "+i);
 		var d = ["A.B.C","D.Z.Z","A.B.D","A.Z.Z"];
-		var D = treeify(d,".",json2xml);
+		console.log("In:  " + d.join(" "))
+		var D = treeify(d,".");
+		console.log("Out: " + JSON.stringify(D));
 		json2indent(D);
-		json2xml(D);
 	}
 
 	if (i == 4) {
@@ -44,17 +48,42 @@ function runtest(i,debug) {
 		for (var i = 0;i<n;i++) {
 			d[i] = d[i].substring(0,1) + "." + d[i];
 		}
+		console.log("In:  " + d.join(" "))
 		var D = treeify(d,".");
+		console.log("Out: " + JSON.stringify(D));
 		json2indent(D);
-		json2xml(D);
-
 	}
 
 	if (i == 5) {
-		var xml2js = require('xml2js');
-
 		console.log("__________________________________________");
 		console.log("Demo "+i);
+		var d = [];
+
+		// node.js
+		if (typeof(exports) !== "undefined" && require){
+			var data = require('./data/js/testdata.js').testdata();
+		} else {
+			var data = testdata();
+		}
+
+		console.log("Start placing in array");
+		var start = new Date().getTime();
+		for (var i = 0;i < data.length;i++) {
+			d[i] = data[i].value.replace("_",".");
+		}
+		var stop = new Date().getTime();
+		console.log("Finished placing in array "+(stop-start)+" ms");
+		var D = treeify(d,".");
+		json2indent(D);
+	}
+
+	if (i == 6) {
+		var xml2js = require('xml2js');
+
+		// Long flat XML document.  Extract keys
+		console.log("__________________________________________");
+		console.log("Demo "+i);
+
 		fs.readFile("xml/sscweb.xml",function (err,data) {
 
 			parser = new xml2js.Parser();
@@ -70,72 +99,37 @@ function runtest(i,debug) {
 					//console.log(catalog)
 					links[i] = catalog + "." + catalog + "/" + dataset + "." + catalog + "/" + dataset + "/" + parameters;
 				}
-				if (0) {
-				var links = links
-								.join("!!")
-								.concat("!!")
-								.replace(/http:\/\/autoplot.org\/git\/jyds\/tsdsfe\.jyds\?http:\/\/tsds.org\/get\/\?catalog=/g,"")
-								.replace(/&dataset=/g,".")
-								.replace(/&parameters=/g,".")
-								.replace(/&start.*?\!\!/g,"!!")
-								.split("!!")
-								.slice(0,-1);
-				}
 				var D = treeify(links,".");
-				console.log(D);
+				json2indent(D);
 				json2xml(D);
 			})
 		})
-	}
 
-	return;
-
-	if (i == 5) {
-		console.log("__________________________________________");
-		console.log("Demo "+i);
-		var d = [];
-
-		// node.js
-		if (typeof(exports) !== "undefined" && require){
-			var data = require('./js/testdata.js').testdata();
-		} else {
-			var data = testdata();
-		}
-
-		console.log("Start placing in array");
-		for (var i = 0;i < data.length;i++) {
-			d[i] = data[i].value.replace("_",".");
-		}		
-		var stop = new Date().getTime();
-		console.log("Finished placing in array "+(stop-start)+" ms");
-		var D = treeify(d,".");
-		json2indent(D);
-	}
-}
-
-	// Extract links in XML document.
-	function extractURLs(doc){
-		//console.log(doc)
-		var ret = [];
-		for (var key in doc){
-			if (key === "bookmark") {
-				var urls = doc[key].map(function(item){
-					return item.uri[0];
-				});
-				ret = ret.concat(urls);
-			} else if (key === "bookmark-list" || key === "bookmark-folder"){
-				if (Object.prototype.toString.call(doc[key]) === '[object Array]'){
-					doc[key].forEach(function(item){
-						ret = ret.concat(extractURLs(item));
+		function extractURLs(doc){
+			// Extracts a list of URI node values
+			var ret = [];
+			for (var key in doc){
+				if (key === "bookmark") {
+					var urls = doc[key].map(function(item){
+						return item.uri[0];
 					});
-				} else {
-					ret = ret.concat(extractURLs(doc[key]));
+					ret = ret.concat(urls);
+				} else if (key === "bookmark-list" || key === "bookmark-folder"){
+					if (Object.prototype.toString.call(doc[key]) === '[object Array]'){
+						doc[key].forEach(function(item){
+							ret = ret.concat(extractURLs(item));
+						});
+					} else {
+						ret = ret.concat(extractURLs(doc[key]));
+					}
 				}
 			}
+			//console.log(ret)
+			return ret;
 		}
-		//console.log(ret)
-		return ret;
 	}
+
+}
 
 //<bookmark-list version="1.1">
 //	<bookmark-folder>
@@ -228,10 +222,10 @@ function json2xml(obj,level) {
 
 function json2indent(obj,level) {
 
-	level=level||0;
+	level = level || 0;
 	var indent = " ";
 	for(var i=0;i<level;i++){
-		indent+=" ";
+		indent += " ";
 	}
 
 	if (level == 0) {
@@ -254,6 +248,5 @@ function json2indent(obj,level) {
 			console.log(indent + key)
 			json2indent(obj[key],level+1)
 		}
-
 	}
 }

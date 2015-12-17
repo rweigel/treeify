@@ -1,20 +1,8 @@
 {
   "name": "treeify",
   "description": "Create tree structures from delimited strings.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "url": "https://github.com/rweigel/treeify"
-  },
-  "main": "js/treeify",
-  "dependencies": {
-    "jsdom": "*",
-    "request": "*",
-    "async": "*",
-    "xml2js": "*",
-    "xmlbuilder": "*",
-    "express": "*"
-  },
-  "scripts": {
-  "test": "sh tests/test.sh"
-   }
+  }
 }

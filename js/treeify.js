@@ -1,37 +1,43 @@
-// node.js
-if (typeof(exports) !== "undefined" && require){
-	// Require statements
-}
-
-var	debug = false;
-
 function treeify(names,delim,level,parent) {
+	// treefiy(names)
+	// treefiy(names,cb)
+	// treefiy(names,delim)
+	// treefiy(names,delim,cb)
+
+	var	debug = false;
 
 	var start = new Date().getTime();
-	if (debug) console.log("Call treeify.");
+	if (debug) console.log("treeify.js: Called.");
 
-	var delim = delim || "."
-	if (arguments.length == 2) {
-		//treeify.callback = level;
-		level = 0;
-		parent = "";
+	var cb = false;
+	if (typeof(delim) === "function") {
+		var cb = true;
+		treeify.callback = delim;
+		delim = ".";
 	}
+	if (typeof(level) === "function") {
+		var cb = true;
+		treeify.callback = level;
+		level = 0;
+	}
+
+	delim = delim || "."
+	level = level || 0
+	parent = parent || ""
 
 	if (!treeify.n) {
 		treeify.n = 0;
 	} else {
-		treeify.n = treeify.n+1;
+		treeify.n = treeify.n + 1;
 	}
-
-	if (debug) {
-		console.log("treeify.js: Level = " + level);
-		console.log("treeify.js: Names = ")
-		console.log(names);
-	}
-	if (debug) console.log("parent: " + parent)
 	
 	names.sort();
 	var cont = 0;
+
+	if (debug) {
+		console.log("treeify.js: Level = " + level);
+		console.log("treeify.js: Names = " + JSON.stringify(names))
+	}
 
 	var L  = new Array();
 	var Lr = new Array();
@@ -43,17 +49,15 @@ function treeify(names,delim,level,parent) {
 
 	if (names.length == 1) { 
 		if (debug) {
-			console.log("treeify.js: Names has one element");
-			console.log(names[0]);
+			console.log("treeify.js: Names has one element: " + names[0]);
 		}
 		if (names[0].match(delim)) {
 			if (debug) {
-				console.log("treeify.js: Names has one element with delimeter");
-				console.log(names);
+				console.log("treeify.js: Names has one element with delimeter: " + names[0]);
 			}
 			return [names[0]]
 		} else {
-			if (debug) console.log("treeify.js: Names has one element without delimeter")
+			if (debug) console.log("treeify.js: Names has one element without delimeter: " + names[0])
 			return names;
 		}
 		return D;
@@ -67,8 +71,7 @@ function treeify(names,delim,level,parent) {
 		}
 	}
 	if (done) {
-		if (debug) console.log("treeify.js: No delimiters")
-		//console.log(names);
+		if (debug) console.log("treeify.js: No delimiters.")
 		return ".";
 	}
 	
@@ -80,27 +83,25 @@ function treeify(names,delim,level,parent) {
 		L[i]  = tmpa[0];
 		Lr[i] = tmpa.slice(1).join(delim);
 
-		if (Lr[i] != "") {
+		if (Lr[i] !== "") {
 			cont = 1;
 		}
-		if (debug) console.log("parent " + i + parent)
 		if (debug) {
 			if (i > 0) {
 				console.log("treeify.js: Current prefix: "+L[i]+"; Last prefix: "+L[i-1]);
 			} else {
 				console.log("treeify.js: Current prefix: "+L[i]+"; Last prefix: undefined");
 			}
-			console.log("treeify.js: Parent: " + parent)
+			console.log("treeify.js: Parent: " + (parent || "root"))
 		}
 		
 		if (debug) {
-			console.log("treeify.js: Current remainder:")
-			console.log(Lr)
+			console.log("treeify.js: Current remainder: " + JSON.stringify(Lr))
 		}
 		
 		if (cont == 0) {
-			if (debug) console.log('treeify.js: cont=0');
-			if (debug) console.log('treeify.js: parent='+parent)
+			if (debug) console.log('treeify.js: cont = 0');
+			if (debug) console.log('treeify.js: parent = '+parent)
 			continue;
 		}
 		if (i == names.length-1 && L[i] == L[i-1]) {
@@ -113,14 +114,12 @@ function treeify(names,delim,level,parent) {
 			D[L[i-1]] = treeify(lt,delim,level+1,L[i-1]);			
 		} else if (i > 0 && L[i] != L[i-1]) {
 			if (debug) {
-				console.log("treeify.js: +Creating new directory named " + L[i-1]);
-				console.log("treeify.js: +Call treeify.");
-				console.log('treeify.js: +ilast: '+ilast)
+				console.log("treeify.js: Creating new directory named " + L[i-1]);
+				console.log("treeify.js: Call treeify.");
+				console.log('treeify.js: ilast: '+ilast)
 			}
 			var lt = Lr.slice(ilast,i);
-			if (debug) console.log("a parent: " + parent);
 			tmp = treeify(lt,delim,level+1,L[i-1]);
-			if (debug) console.log("b parent: " + parent);
 			if (tmp == ".") {
 				if (debug) console.log(i);
 				if (debug) console.log(ilast);
@@ -146,15 +145,17 @@ function treeify(names,delim,level,parent) {
 	if (Object.keys(D).length === 0) {
 		return names
 	}
-	
-	var stop = new Date().getTime();
-	if (debug) console.log("Finished treeify in "+(stop-start)+" ms");
 
-	//treeify.callback(D)
-	return D;
+	if (cb) {
+		var stop = new Date().getTime();
+		if (debug) console.log("Finished treeify in "+(stop-start)+" ms");
+		treeify.callback(D);
+	} else {
+		return D;
+	}
 }
 
 // node.js
-if (typeof(exports) !== "undefined" && require){
+if (typeof(exports) !== "undefined" && require) {
 	exports.treeify = treeify;
 }

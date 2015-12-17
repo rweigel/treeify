@@ -1,8 +1,45 @@
+var express = require('express');
+var app     = express();
+var server  = require("http").createServer(app);
+var fs      = require("fs");
+var group   = require("./group.js");
+
+// middleware
+app.use(express.bodyParser());
+
+app.get("/", function(req, res){
+	res.send("Usage: post / {urls: [url1, url2, ...]}<form action='/' method='post'><textarea name='urlstr' rows='30' cols='80'></textarea><br><input type='submit' value='submit'></form>");
+});
+
+app.post("/", function(req, res){
+	console.log(req.body);
+	var urls = req.body.urls || parseSource(req.body.urlstr) || [];
+
+	console.log(urls);
+	var doc = group.printXml(group.process(urls));
+	res.send(doc);
+});
+
+app.listen(8001);
+
+function parseSource(raw){
+	var source = raw
+			.trim()
+			.replace("\r", "")
+			.split(/[\r\n]+/)
+			.filter(function(line){
+				return line.trim()!="";
+			});
+	return source;
+}
+
+
 var request = require("request");
-var group   = require("./js/group");
 
 var url = "http://autoplot.org/bookmarks/SuperMAG.xml";
+
 //var url = "http://viviz.org/gallery/images/autoplot-tests/";
+var url = "http://tsds.org/get/?catalog=SSCWeb&return=autoplot-bookmarks";
 var url = "http://tsds.org/get/?catalog=SSCWeb&return=autoplot-bookmarks";
 
 // Fetch and parse links from URL
@@ -127,21 +164,3 @@ function json2xml(node){
 	}
 }
 
-// Convert grouped JSON to indented list.
-function json2indent(node, level) {
-	level=level||0;
-	var indent = "";
-	for(var i=0;i<level;i++){
-		indent+="  ";
-	}
-	console.log(indent+node.name);
-	indent+="  ";
-	node.items.forEach(function(item){
-		console.log(indent+item.url);
-	})
-	if(node.children) {
-		node.children.forEach(function(child){
-			json2indent(child, level+1);
-		})
-	}
-}
