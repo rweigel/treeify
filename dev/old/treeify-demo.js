@@ -1,5 +1,6 @@
-treeify = require(__dirname + "/js/treeify").treeify;
+treeify = require(__dirname+"/treeify").treeify;
 fs = require("fs");
+
 runtest(1,true);
 runtest(2,true);
 runtest(3,true);

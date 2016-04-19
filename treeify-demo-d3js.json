@@ -1,0 +1,98 @@
+var JSONFILE={
+  "parent": "root",
+  "name": "http://svr/",
+  "items": [],
+  "children": [
+    {
+      "parent": "http://svr/",
+      "name": "a=1",
+      "items": [],
+      "children": [
+        {
+          "parent": "a=1",
+          "name": "b=1",
+          "items": [
+            {
+              "url": "http://svr/?a=1&b=1",
+              "tokens": [
+                "http://svr/",
+                "a=1",
+                "b=1"
+              ]
+            }
+          ]
+        },
+        {
+          "parent": "a=1",
+          "name": "b=2",
+          "items": [
+            {
+              "url": "http://svr/?a=1&b=2",
+              "tokens": [
+                "http://svr/",
+                "a=1",
+                "b=2"
+              ]
+            }
+          ]
+        },
+        {
+          "parent": "a=1",
+          "name": "b=3",
+          "items": [
+            {
+              "url": "http://svr/?a=1&b=3",
+              "tokens": [
+                "http://svr/",
+                "a=1",
+                "b=3"
+              ]
+            }
+          ]
+        },
+        {
+          "parent": "a=1",
+          "name": "b=4",
+          "items": [
+            {
+              "url": "http://svr/?a=1&b=4",
+              "tokens": [
+                "http://svr/",
+                "a=1",
+                "b=4"
+              ]
+            }
+          ]
+        },
+        {
+          "parent": "a=1",
+          "name": "b=5",
+          "items": [
+            {
+              "url": "http://svr/?a=1&b=5",
+              "tokens": [
+                "http://svr/",
+                "a=1",
+                "b=5"
+              ]
+            }
+          ]
+        },
+        {
+          "parent": "a=1",
+          "name": "b=6",
+          "items": [
+            {
+              "url": "http://svr/?a=1&b=6",
+              "tokens": [
+                "http://svr/",
+                "a=1",
+                "b=6"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
