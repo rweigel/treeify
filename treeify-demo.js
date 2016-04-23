@@ -22,6 +22,7 @@ function runtest(i,debug) {
 		var D = treeify(d,".");
 		console.log("Out: " + JSON.stringify(D));
 		json2indent(D);
+		json2indentbrief(D);
 		json2apxml(D);
 	}
 
