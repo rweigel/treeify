@@ -1,15 +1,29 @@
-function treeify(urls, options, tokenize) {
+function group(urls, options, tokenize) {
+
 	// Weibao Wei
-	
-	if (!('MAX_ITEMS' in options)) {
+		
+	var options = options || {};
+
+	var debug = false;
+
+	if (!('max_items' in options)) {
 		var MAX_ITEMS = 5;
 	} else {
 		var MAX_ITEMS = options["max_items"];
 	}
-	if (!('MIN_ITEMS' in options)) {
-		var MIN_ITEMS = 2;
+	if (!('min_items' in options)) {
+		var MIN_ITEMS = 1;
 	} else {
 		var MIN_ITEMS = options["min_items"];
+	}
+
+	if (MIN_ITEMS < 1) {
+		console.log("group: min_items 1. Setting min_items = 1.")
+		MIN_ITEMS = 1;
+	}
+	if (MIN_ITEMS > MAX_ITEMS) {
+		console.log("group: min_items > max_items. Setting max_items = Infinity.")
+		MAX_ITEMS = Infinity;
 	}
 
 	tokenize = tokenize ? tokenize : default_tokenize;
@@ -28,7 +42,7 @@ function treeify(urls, options, tokenize) {
 	return root;
 
 	Array.prototype.find = function(value){
-		for (var i=0;i<this.length;i++){
+		for (var i = 0;i < this.length;i++){
 			if (this[i] === value){
 				return i;
 			}
@@ -64,26 +78,27 @@ function treeify(urls, options, tokenize) {
 
 	function divide (node, ithToken){
 
-		if (0) {
-			console.log(ithToken)
-			console.log(node.items);
-			console.log(node.items.length);
-			console.log(MIN_ITEMS)
-		}
+		if (debug) {
+			console.log("group.divide(): node.items.length: " + node.items.length)
+			console.log("group.divide(): node.items: ")
+			console.log(node.items)
+		}	
 
 		if (node.items.length <= MIN_ITEMS){
-			//console.log("Returning; node contains <= " + MIN_ITEMS + " items.")
+			if (debug) console.log("Returning; node contains <= " + MIN_ITEMS + " items.")
 			return;
 		}
 		if (!node.children){
 			node.children = [];
 		}
 
+
 		while (node.items.length > 0){
 			var item = node.items.shift();
+
 			var token =  item.tokens[ithToken];
 			var found = false;
-			for (var j=0;j<node.children.length;j++){
+			for (var j = 0;j < node.children.length;j++){
 				if(node.children[j].name===token){
 					node.children[j].items.push(item);
 					found = true;
@@ -132,5 +147,5 @@ function treeify(urls, options, tokenize) {
 
 // node.js
 if (typeof(exports) !== "undefined" && require) {
-	exports.treeify = treeify;
+	exports.group = group;
 }
