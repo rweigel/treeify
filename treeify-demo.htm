@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>jquery-simplefolders</title>
+<script src=http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js></script>
+<link rel=StyleSheet href="simplefolders/jquery-simplefolders/main.css" type="text/css" media=screen>
+
+<!--script src=jquery-simplefolders/main.js></script-->
+<script>
+$.ready(function() {
+	$(document)
+		.delegate('.expander','click', function () {
+			$(this)
+				.toggleClass('expanded')
+				.nextAll('ul:first')
+				.toggleClass('expanded');
+		return true;
+	})
+})
+</script>
+</head>
+<body>
+
+<p>
+<ul class='tree'>
+  <li>A</li>
+</ul>
+</p>
+
+<p>
+<ul class="tree">
+    <li>B
+        <div class="expander"></div>
+        <ul>
+              <li>C</li>
+        </ul>
+    </li>
+</ul>
+</p>
+
+<p>
+<ul class="tree">
+	<li>A
+	<div class="expander"></div>
+		<ul>
+			<li>.</li>
+			<li>B</li>
+			<li>C</li>
+		</ul>
+	</li>
+</ul>
+</p>
+
+<p>
+<ul class="tree">
+  <li>branch1</li>  
+  <li>branch2
+    <div class="expander"></div>
+		<ul>
+			<li>another branch</li>
+			<li>another branch</li>
+		</ul>
+	</li>
+</ul>
+</p>
+
+</body>
+</html>

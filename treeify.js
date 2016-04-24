@@ -1,4 +1,5 @@
-function treeify(names,delim,level,parent) {
+function treeify(names, delim, level, parent) {
+
 	// treefiy(names)
 	// treefiy(names,cb)
 	// treefiy(names,delim)
@@ -55,26 +56,15 @@ function treeify(names,delim,level,parent) {
 			if (debug) {
 				console.log("treeify.js: Names has one element with delimeter: " + names[0]);
 			}
-			return [names[0]]
+			//return [names[0]]
 		} else {
 			if (debug) console.log("treeify.js: Names has one element without delimeter: " + names[0])
 			return names;
 		}
-		return D;
+		//return D;
 	}
 
-	done = true;
-	for (var i = 0;i < names.length;i++) {
-		if (names[i].match(delim)) {
-			done = false;
-			continue;
-		}
-	}
-	if (done) {
-		if (debug) console.log("treeify.js: No delimiters.")
-		return ".";
-	}
-	
+
 	var ilast = 0;
 	for (var i = 0;i < names.length;i++) {
 		var tmpa = [];
@@ -85,6 +75,8 @@ function treeify(names,delim,level,parent) {
 
 		if (Lr[i] !== "") {
 			cont = 1;
+		} else {
+			Lr[i] = ".";
 		}
 		if (debug) {
 			if (i > 0) {
@@ -104,14 +96,18 @@ function treeify(names,delim,level,parent) {
 			if (debug) console.log('treeify.js: parent = '+parent)
 			continue;
 		}
-		if (i == names.length-1 && L[i] == L[i-1]) {
+		if ((i == names.length-1 && L[i] == L[i-1]) || names.length == 1) {
 			if (debug) {
 				console.log("treeify.js: Creating new directory named " + L[i-1]);
 				console.log("treeify.js: Call treeify.");
 				console.log('treeify.js: ilast: '+ilast)
 			}
 			var lt = Lr.slice(ilast);
-			D[L[i-1]] = treeify(lt,delim,level+1,L[i-1]);			
+			if (names.length == 1) {
+				D[L[i]] = treeify(lt,delim,level+1,L[i]);
+			} else {
+				D[L[i-1]] = treeify(lt,delim,level+1,L[i-1]);
+			}
 		} else if (i > 0 && L[i] != L[i-1]) {
 			if (debug) {
 				console.log("treeify.js: Creating new directory named " + L[i-1]);

@@ -2,6 +2,7 @@
 
 Convert arrays with delmited strings into a JSON object:
  node treeify-demo.js
+ node treeify-demo-large.js
 
 Visualize output using D3js
  node treeify-demo-d3js.js > treeify-demo-d3js.json
