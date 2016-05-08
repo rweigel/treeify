@@ -1,0 +1,1 @@
+var HTML='<ul class="tree">  <li>A<div class="expander"></div><ul>      <li>B<div class="expander"></div><ul>         <li>            C         </li>      </ul></li>  </ul></li>  <li>D<div class="expander"></div><ul>      <li>E<div class="expander"></div><ul>         <li>            .         </li>         <li>            F         </li>      </ul></li>  </ul></li></ul>'

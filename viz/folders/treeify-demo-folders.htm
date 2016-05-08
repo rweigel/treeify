@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Treeify Folders</title>
+<script src=http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js></script>
+<link rel=StyleSheet href="../deps/simplefolders/jquery-simplefolders/main.css" type="text/css" media=screen>
+
+<script src="treeify-demo-folders.json"></script>
+
+<!--Based on code from main.js in -->
+<!--script src=../deps/simplefolders/jquery-simplefolders/main.js></script-->
+<script>
+$(document)
+	.ready(function () { 
+		$('p').first().html($(HTML)) 
+		var allshown = false;
+		$('#all').click(function () {
+			$('.expander').click();
+			if (allshown) {
+				allshown = false;
+				$("#all").text("Expand all")
+			} else {
+				allshown = true;
+				$("#all").text("Collapse all")
+			}
+		})
+	})
+	.delegate('.expander','click',function () {
+  		$(this)
+  			.toggleClass('expanded')
+    		.nextAll('ul:first')
+    		.toggleClass('expanded');
+  			return true;
+	})
+</script>
+</head>
+<body>
+<a id="all" href="#">Expand all</a>
+
+<p>
+</p>
+
+</body>
+</html>

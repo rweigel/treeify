@@ -1,9 +1,7 @@
 fs = require("fs");
 
-treeify     = require(__dirname + "/treeify").treeify;
-json2indent = require(__dirname + "/lib/treeify/json2indent").json2indent;
-json2apxml  = require(__dirname + "/lib/treeify/json2apxml").json2apxml;
-json2html   = require(__dirname + "/lib/treeify/json2html").json2html;
+treeify = require(__dirname + "/treeify").treeify;
+json2   = require(__dirname + "/lib/json2").json2;
 
 var In = 
 [
@@ -18,8 +16,7 @@ var In =
 	{"delimiter": "&", list:["a=1&b=2",'a=1&c=2']}
 ];
 
-window = {}
-rundemo(0,false);
+rundemo(0,true);
 
 function rundemo(i,cont) {
 	var text = "";
@@ -30,17 +27,11 @@ function rundemo(i,cont) {
 	console.log("Demo "+i);
 	console.log("In:  " + In[i]["list"].join(" "));
 	console.log("Out: " + JSON.stringify(Out));
-
-	if (typeof(window) === "undefined") {
-		//text = json2indent(Out);
-		//console.log(text);
-		// or
-		json2indent({json: Out, stream: true});
-		// or
-		//json2indent(Out, function (text) {console.log(text)})
-	} else {
-		html = json2html(Out);
-	}
+	text = json2(Out,'text');
+	console.log(text)
+	text = json2(Out,{stdout: true});
+	console.log(text)
+	text = json2(Out,"text",function (txt) {console.log(txt)})	;
 	if (cont && i < In.length-1) {
 		rundemo(i+1,cont);
 	}

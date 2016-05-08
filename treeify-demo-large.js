@@ -1,5 +1,5 @@
 treeify = require(__dirname + "/treeify").treeify;
-json2indent = require(__dirname + "/lib/treeify/json2indent").json2indent;
+json2 = require(__dirname + "/lib/json2").json2;
 
 // node.js
 if (typeof(exports) !== "undefined" && require){
@@ -17,7 +17,8 @@ var stop = new Date().getTime();
 console.log("Finished placing in array in " + (stop - start) + " ms.");
 var start = new Date().getTime();
 var D = treeify(d,".");
+console.log(D)
 var stop = new Date().getTime();
-json2indent(D);
+json2(D);
 console.log("Finished computing tree in " + (stop - start) + " ms.");
 //json2indent(D);

@@ -1,20 +1,30 @@
-function json2indent(obj, id, level) {
+function json2indent(obj, id, level, cb) {
+
+	// Old code for reference.  Has been merged into json2.js
+	
+	// Input format
+	// { A: [ '.', 'B', 'C' ] }
+	// { A: { B: [ 'C' ] } }
+	// ["A","B","C"]
 
 	if (typeof(json2indent[id]) === "undefined") {
 
-		// TODO: Use MD5 or https://jwt.io/
-		var id = obj.toString().length + Math.random().toString();
+		var cb = id;
+		// TODO: Write in a way that unique ID is not needed?
+		// Create unique ID.
+		var id = (new Date().getTime().toString()) + Math.random().toString();
 
 		// First call
+		json2indent[id] = {};
 		json2indent[id].Ncalls = 0;
 		json2indent[id].Output = "";
-		//json2indent[id].cb     = cb;
+		json2indent[id].HTML   = "";
+		json2indent[id].cb     = cb;
 		if (obj.stream) {
 			json2indent[id].stream = true;
 			var obj = obj.json;
 			delete obj.json;
 			delete obj.stream;
-			console.log(obj)
 		} else {
 			json2indent[id].stream = false;
 		}
@@ -36,7 +46,12 @@ function json2indent(obj, id, level) {
 	if (level == 0) {
 		if (isarray(obj)) {
 			if (json2indent[id].stream) console.log(indent + obj.join("\n"));
-			return indent + obj.join("\n");
+			if (typeof(json2indent[id].cb) === "undefined") {
+				return indent + obj.join("\n");
+			} else {
+				json2indent[id].cb(indent + obj.join("\n"));
+			}
+			return;
 		}		
 	}
 
@@ -52,17 +67,19 @@ function json2indent(obj, id, level) {
 			}
 		} else {
 			json2indent[id].Output += indent + key + "\n";
-			if (json2.stream) console.log(indent + key);
+			if (json2indent[id].stream) console.log(indent + key);
 			json2indent[id].Ncalls += 1;
-			json2indent[id](obj[key], id, level+1);
+			json2indent(obj[key], id, level+1);
 			json2indent[id].Ncalls -= 1;
 		}
 	}
 
-	if (json2indent[id].Ncalls == 0 || typeof(cb) === "undefined") {
-		return json2indent[id].Output;
-	} else {
-		json2indent[id].cb(json2indent[id].Output);
+	if (json2indent[id].Ncalls == 0) {
+		if (typeof(json2indent[id].cb) === "undefined") {
+			return json2indent[id].Output;
+		} else {
+			json2indent[id].cb(json2indent[id].Output);
+		}
 	}
 
 }
