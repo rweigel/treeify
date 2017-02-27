@@ -76,7 +76,7 @@ function treeify(names, delim, level, parent) {
 		if (Lr[i] !== "") {
 			cont = 1;
 		} else {
-			Lr[i] = ".";
+			Lr[i] = delim;
 		}
 		if (debug) {
 			if (i > 0) {
