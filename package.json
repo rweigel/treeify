@@ -1,7 +1,7 @@
 {
   "name": "treeify",
   "description": "Create tree structures from delimited strings.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "treeify.js",
   "repository": {
     "url": "https://github.com/rweigel/treeify"
